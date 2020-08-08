@@ -86,12 +86,12 @@ class ProfileService
     /**
      * Service function to delete record based on id
      * @param int $id
-     * @return void
+     * @return int
      */
     public function delete(int $id)
     {
         try {
-            $this->profileRepository->delete($id);
+            return $this->profileRepository->delete($id);
         } catch (DomainException $exp) {
             throw $exp;
         } catch (\Throwable $exp) {

@@ -36,9 +36,10 @@ class MockProfileRepository implements IRepository
 
     public function find(int $id)
     {
-        return array_filter($this->cache, function($item) use($id) {
+        $result = array_filter($this->cache, function($item) use($id) {
             return $item['id'] == $id;
         });
+        return $result[0] ?? null;
     }
 
     public function query(array $filters)

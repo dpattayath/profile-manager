@@ -2,9 +2,7 @@
 namespace App\Repository;
 
 use App\Abstractions\IRepository;
-use App\Models\Category;
 use App\Models\Profile;
-use App\Models\Location;
 use App\Validators\ProfileValidator;
 
 class ProfileRepository implements IRepository
@@ -36,15 +34,13 @@ class ProfileRepository implements IRepository
     {
         $this->validator->validateQuery($filters);
 
-        $profiles = Profile::cursor()->filter(function ($profile) {
+        $profiles = Profile::cursor()->filter(function ($profile) use($filters) {
             $result = true;
-            if (isset($filters['location'])) {
-                $location_id = Location::find($filters['location'])->pluck('id');
-                $result = $result && $profile->location_id == $location_id;
+            if (isset($filters['location_id'])) {
+                $result = $result && $profile->location_id == $filters['location_id'];
             }
-            if (isset($filters['category'])) {
-                $category_id = Category::find($filters['category'])->pluck('id');
-                $result = $result && $profile->category_id == $category_id;
+            if (isset($filters['category_id'])) {
+                $result = $result && $profile->category_id == $filters['category_id'];
             }
             return $result;
         });
@@ -61,16 +57,6 @@ class ProfileRepository implements IRepository
     {
         $this->validator->validateSave(array_merge($data, ['id' => $id]));
 
-        $location = null;
-        if (isset($data['location'])) {
-            $location = Location::where('name', '=', $data['location'])->first();
-        }
-
-        $category = null;
-        if (isset($data['category'])) {
-            $category = Category::where('name', '=', $data['category'])->first();
-        }
-
         if ($id) {
             $profile = Profile::find($id);
         } else {
@@ -82,8 +68,8 @@ class ProfileRepository implements IRepository
         $profile->description = $data['description'];
         $profile->email = $data['email'];
         $profile->phone_number = $data['phone_number'];
-        $profile->location_id = $location ? $location->id : null;
-        $profile->category_id = $category ? $category->id : null;
+        $profile->location_id = $data['location_id'];
+        $profile->category_id = $data['category_id'];
         $profile->rating = $data['rating'];
         $profile->followers = $data['followers'];
         $profile->save();
@@ -94,12 +80,11 @@ class ProfileRepository implements IRepository
     /**
      * @override
      * @param int $id
-     * @return mixed
+     * @return int
      */
     public function delete(int $id)
     {
         $this->validator->validateDelete(['id' => $id]);
-        $profile = Profile::find($id);
-        $profile->delete();
+        return Profile::destroy($id);
     }
 }
