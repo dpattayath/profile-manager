@@ -1,8 +1,10 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ProfileResource;
 use App\Services\ProfileService;
 use Illuminate\Http\Request;
+use App\Http\Requests\ProfileRequest;
 
 class ProfileController extends Controller
 {
@@ -16,24 +18,30 @@ class ProfileController extends Controller
     public function all(Request $request)
     {
         $filters = $request->all();
-        return $this->profileService->all($filters);
+        $profiles = $this->profileService->all($filters);
+        return ProfileResource::collection($profiles);
     }
 
     public function get(int $id)
     {
-        return $this->profileService->get($id);
+        $profile = $this->profileService->get($id);
+        return new ProfileResource($profile);
     }
 
-    public function post(Request $request)
+    public function post(ProfileRequest $request)
     {
-        $data = $request->all();
-        return $this->profileService->create($data);
+        $validated = $request->validated();
+
+        $profile = $this->profileService->create($validated);
+        return new ProfileResource($profile);
     }
 
-    public function put(Request $request, int $id)
+    public function put(ProfileRequest $request, int $id)
     {
-        $data = $request->all();
-        return $this->profileService->update($data, $id);
+        $validated = $request->validated();
+
+        $profile = $this->profileService->update($validated, $id);
+        return new ProfileResource($profile);
     }
 
     public function delete(int $id)

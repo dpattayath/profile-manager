@@ -13,13 +13,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // $this->app->when('App\Services\ProfileService')
-        //   ->needs('App\Abstractions\IRepository')
-        //   ->give('App\Repository\ProfileRepository');
-
         $this->app->when('App\Services\ProfileService')
           ->needs('App\Abstractions\IRepository')
-          ->give('App\Helpers\MockProfileRepository');
+          ->give('App\Repository\ProfileRepository');
+
+        // $this->app->when('App\Services\ProfileService')
+        //   ->needs('App\Abstractions\IRepository')
+        //   ->give('App\Helpers\MockProfileRepository');
     }
 
     /**

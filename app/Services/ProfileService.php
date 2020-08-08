@@ -2,6 +2,9 @@
 namespace App\Services;
 
 use App\Abstractions\IRepository;
+use App\Exceptions\DomainException;
+use App\Exceptions\RepositoryException;
+
 
 class ProfileService
 {
@@ -19,8 +22,14 @@ class ProfileService
      */
     public function all(array $filters)
     {
-        $profiles = $this->profileRepository->query($filters);
-        return $profiles;
+        try {
+            $profiles = $this->profileRepository->query($filters);
+            return $profiles;
+        } catch (DomainException $exp) {
+            throw $exp;
+        } catch (\Throwable $exp) {
+            throw new RepositoryException($exp->getMessage());
+        }
     }
 
     /**
@@ -30,8 +39,14 @@ class ProfileService
      */
     public function get(int $id)
     {
-        $profile = $this->profileRepository->find($id);
-        return $profile;
+        try {
+            $profile = $this->profileRepository->find($id);
+            return $profile;
+        } catch (DomainException $exp) {
+            throw $exp;
+        } catch (\Throwable $exp) {
+            throw new RepositoryException($exp->getMessage());
+        }
     }
 
     /**
@@ -41,8 +56,14 @@ class ProfileService
      */
     public function create(array $data)
     {
-        $profile = $this->profileRepository->save($data);
-        return $profile;
+        try {
+            $profile = $this->profileRepository->save($data);
+            return $profile;
+        } catch (DomainException $exp) {
+            throw $exp;
+        } catch (\Throwable $exp) {
+            throw new RepositoryException($exp->getMessage());
+        }
     }
 
     /**
@@ -53,7 +74,13 @@ class ProfileService
      */
     public function update(array $data, int $id)
     {
-        return $this->profileRepository->save($data, $id);
+        try {
+            return $this->profileRepository->save($data, $id);
+        } catch (DomainException $exp) {
+            throw $exp;
+        } catch (\Throwable $exp) {
+            throw new RepositoryException($exp->getMessage());
+        }
     }
 
     /**
@@ -63,6 +90,12 @@ class ProfileService
      */
     public function delete(int $id)
     {
-        $this->profileRepository->delete($id);
+        try {
+            $this->profileRepository->delete($id);
+        } catch (DomainException $exp) {
+            throw $exp;
+        } catch (\Throwable $exp) {
+            throw new RepositoryException($exp->getMessage());
+        }
     }
 }
