@@ -27,8 +27,8 @@ class ProfileRequest extends JsonRequest
             'description' => ['nullable', 'max:255'],
             'rating' => ['nullable'],
             'followers' => ['nullable'],
-            "location"  => ['required'],
-	        "category"  => ['required'],
+            "location_id"  => ['required'],
+	        "category_id"  => ['required'],
         ];
     }
 
@@ -62,8 +62,8 @@ class ProfileRequest extends JsonRequest
             'description' => 'Description',
             'rating' => 'Rating',
             'followers' => 'Followers',
-            'location' => 'Location',
-            'category' => 'Category',
+            'location_id' => 'Location',
+            'category_id' => 'Category',
         ];
     }
 
