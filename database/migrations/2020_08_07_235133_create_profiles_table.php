@@ -24,7 +24,7 @@ class CreateProfilesTable extends Migration
             $table->integer('category_id')->unsigned();
             $table->string('description')->nullable();
             $table->float('rating')->default(0.0);
-            $table->smallInteger('followers')->default(0);
+            $table->bigInteger('followers')->default(0);
             $table->timestamps();
             $table->softDeletes();
 

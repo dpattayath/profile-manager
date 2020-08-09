@@ -3,6 +3,7 @@ use Illuminate\Database\Seeder;
 
 use App\Database\Seeds\CategoriesSeeder;
 use App\Database\Seeds\LocationsSeeder;
+use App\Database\Seeds\ProfileSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,7 +14,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(CategoriesSeeder::class);
-        // $this->call(LocationsSeeder::class);
+        $this->call(CategoriesSeeder::class);
+        $this->call(LocationsSeeder::class);
+        $this->call(ProfileSeeder::class);
     }
 }

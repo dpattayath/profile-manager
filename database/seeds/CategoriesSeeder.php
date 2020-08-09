@@ -8,8 +8,10 @@ class CategoriesSeeder extends Seeder
 {
     public function run()
     {
-        Category::create(['name' => 'Model']);
-        Category::create(['name' => 'Photographer']);
-        Category::create(['name' => 'Designer']);
+        Category::create(['name' => 'Models']);
+        Category::create(['name' => 'Actors/Presenters']);
+        Category::create(['name' => 'Photographers/Video']);
+        Category::create(['name' => 'Celebrities']);
+        Category::create(['name' => 'Influencers/Bloggers']);
     }
 }
