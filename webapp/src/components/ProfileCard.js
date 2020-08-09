@@ -81,16 +81,18 @@ const SubTitle = styled.div`
 `;
 
 const ProfileCard = (props) => {
-    const {profile} = props;
+    const {profile, isLoggedIn} = props;
     return (
         <StyledCard>
             <img src={"http://localhost:3000/images/" + profile.photo_identifier} alt={profile.first_name}/>
             <StyledCardBody>
                 <Title>
                     <span className="name">{profile.first_name} {profile.last_name}</span>
-                    <span className="delete">
-                        <img className="rubbish-bin" src={rubbishBin} alt="delete"/>
-                    </span>
+                    {isLoggedIn && (
+                        <span className="delete">
+                            <img className="rubbish-bin" src={rubbishBin} alt="delete"/>
+                        </span>
+                    )}
                 </Title>
                 <SubTitle>
                     <img className="location" src={locationIcon} alt="location"/>

@@ -14,8 +14,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+/**
+ * Identity routes - Authentication, Authorization
+ */
+Route::group(['middleware' => 'api', 'prefix' => 'auth', 'namespace' => '\App\Http\Identity\Controllers'], function ($router) {
+
+    Route::post('register', 'AuthController@register');
+
+    Route::post('login', 'AuthController@login');
+
+    Route::post('logout', 'AuthController@logout');
+
 });
 
 Route::namespace('\App\Http\Controllers')->prefix("profiles")->group(function() {
@@ -28,6 +37,6 @@ Route::namespace('\App\Http\Controllers')->prefix("profiles")->group(function() 
 
     Route::put('/{id}', 'ProfileController@put');
 
-    Route::delete('/{id}', 'ProfileController@delete');
+    Route::middleware('auth:api')->delete('/{id}', 'ProfileController@delete');
 
 });

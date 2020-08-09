@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Container, Row, Col, Input } from 'reactstrap';
 import ProfileCard from '../components/ProfileCard';
 import ProfileService from '../services/ProfileService';
+import AuthService from '../services/AuthService';
 
 const Heading = styled.div`
     text-align: center;
@@ -92,7 +93,8 @@ const Profile = () => {
                         profile.category = categories[profile.category_id];
                         return (
                             <Col key={index}>
-                                <ProfileCard profile={profile}/>
+                                <ProfileCard profile={profile}
+                                    isLoggedIn={AuthService.isLoggedIn()}/>
                             </Col>
                         );
                     })
