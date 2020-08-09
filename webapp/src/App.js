@@ -1,10 +1,32 @@
 import React from 'react';
 import Profile from './pages/Profile';
+import Navigation from './components/Navigation';
 
-function App() {
+const App = () => {
+
+  const logout = () => {
+    console.log("Logged out");
+  }
+
+  const profile = {
+    username : 'dileep'
+  }
+
   return (
-    <Profile />
+
+    <React.Fragment>
+
+      <Navigation
+        isLoggedIn={true}
+        logout={logout}
+        profile={profile}/>
+
+      <Profile />
+
+    </React.Fragment>
+
   );
+
 }
 
 export default App;
