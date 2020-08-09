@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
 import { Container, Row, Col, Input } from 'reactstrap';
 import ProfileCard from '../components/ProfileCard';
-import MockProfileService from '../services/MockProfileService';
+import ProfileService from '../services/ProfileService';
 
 const Heading = styled.div`
     text-align: center;
@@ -23,14 +23,23 @@ const Profile = () => {
     const [categoryFilter, setCategoryFilter] = useState(0);
     const [profiles, setProfiles] = useState([]);
 
-    const categories = MockProfileService.getCategories();
-    const locations = MockProfileService.getLocations();
+    const categories = ProfileService.getCategories();
+    const locations = ProfileService.getLocations();
 
     const fetchProfiles = () => {
-        setProfiles(MockProfileService.getProfiles({
+        ProfileService.getProfiles({
             'location_id': locationFilter,
             'category_id': categoryFilter,
-        }));
+        })
+        .then(res => res.json())
+        .then(
+            (result) => {
+                setProfiles(result.data);
+            },
+            (error) => {
+                console.log(error);
+            }
+        )
     }
 
     const filterByLocation = (e) => {
@@ -88,6 +97,12 @@ const Profile = () => {
                         );
                     })
                 }
+            </Row>
+
+            <Row>
+                {profiles.length === 0 && (
+                    <Col sm="12" md={{ size: 6, offset: 3 }}>No matching profiles</Col>
+                )}
             </Row>
 
         </Container>

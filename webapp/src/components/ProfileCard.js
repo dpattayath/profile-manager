@@ -5,6 +5,7 @@ import starIcon from './icons/star.svg';
 import instagramIcon from './icons/instagram.svg';
 import rubbishBin from './icons/rubbish-bin.svg';
 import {Card, CardBody} from 'reactstrap';
+import {convertToThousands} from '../utils';
 
 const StyledCard = styled(Card)`
     width: 260px;
@@ -83,7 +84,7 @@ const ProfileCard = (props) => {
     const {profile} = props;
     return (
         <StyledCard>
-            <img src={"http://localhost:3000/images/" + profile.profile_image} alt={profile.first_name}/>
+            <img src={"http://localhost:3000/images/" + profile.photo_identifier} alt={profile.first_name}/>
             <StyledCardBody>
                 <Title>
                     <span className="name">{profile.first_name} {profile.last_name}</span>
@@ -102,7 +103,7 @@ const ProfileCard = (props) => {
                 </SubTitle>
                 <SubTitle>
                     <img className="instagram" src={instagramIcon} alt="followers"/>
-                    <span>{profile.followers} Followers</span>
+                    <span>{convertToThousands(profile.followers)} Followers</span>
                 </SubTitle>
             </StyledCardBody>
         </StyledCard>
