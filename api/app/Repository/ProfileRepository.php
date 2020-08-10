@@ -37,10 +37,10 @@ class ProfileRepository implements IRepository
         $profiles = Profile::cursor()->filter(function ($profile) use($filters) {
             $result = true;
             if (isset($filters['location_id'])) {
-                $result = $result && $profile->location_id == $filters['location_id'];
+                $result = $result && $profile->location_id == intval($filters['location_id']);
             }
             if (isset($filters['category_id'])) {
-                $result = $result && $profile->category_id == $filters['category_id'];
+                $result = $result && $profile->category_id == intval($filters['category_id']);
             }
             return $result;
         });

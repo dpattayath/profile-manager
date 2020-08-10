@@ -5,15 +5,6 @@ namespace App\Http\Requests;
 class ProfileRequest extends JsonRequest
 {
     /**
-     * Determine if the user is authorized to make this request
-     * @return true
-     */
-    public function authorize()
-    {
-        return true;
-    }
-
-    /**
      * Get the validation rules that apply to the request.
      * @return array
      */

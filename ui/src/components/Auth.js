@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import {Row, Col, Button, Nav, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Input} from 'reactstrap';
+import {Row, Col, Button, Nav, UncontrolledDropdown,
+    DropdownToggle, DropdownMenu, DropdownItem, Input,
+    Modal, ModalHeader, ModalBody} from 'reactstrap';
 import AuthService from '../services/AuthService';
 import StorageService from '../services/StorageService';
 import AuthContext from '../contexts/AuthContext';
@@ -10,6 +12,8 @@ const Auth = (props) => {
     const [user, setUser] = useState({});
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [loginFailed, setLoginFailed] = useState(false);
+    const closeAlert = () => setLoginFailed(!loginFailed);
 
     // on load
     useEffect(() => {
@@ -34,6 +38,22 @@ const Auth = (props) => {
         }
     }
 
+    const loggedIn = (data) => {
+        setLoggedIn(true);
+        setUser(data.user);
+        StorageService.set('token', data.token);
+        StorageService.set('user', data.user);
+        onAuthChange(true);
+    }
+
+    const loggedOut = () => {
+        setUser({});
+        setLoggedIn(false);
+        StorageService.remove('token');
+        StorageService.remove('user');
+        onAuthChange(false);
+    }
+
     /**
     handles login request
      */
@@ -42,14 +62,11 @@ const Auth = (props) => {
             .then(response => response.json())
             .then((res) => {
                 if (!res.error) {
-                    setLoggedIn(true);
-                    setUser(res.data.user);
-                    StorageService.set('token', res.data.token);
-                    StorageService.set('user', res.data.user);
-                    onAuthChange(true);
+                    loggedIn(res.data);
                 }
             }).catch((error) => {
-                console.error(error);
+                loggedOut();
+                setLoginFailed(true);
             });
     }
 
@@ -61,14 +78,10 @@ const Auth = (props) => {
         AuthService.logout(token)
             .then((res) => {
                 if (res.status === 200) {
-                    setLoggedIn(false);
-                    setUser({});
-                    StorageService.remove('token');
-                    StorageService.remove('user');
-                    onAuthChange(false);
+                    loggedOut();
                 }
             }).catch((error) => {
-                console.error(error);
+                loggedOut();
             });
     }
 
@@ -113,6 +126,12 @@ const Auth = (props) => {
                     </Nav>
                 )
             }
+            <Modal isOpen={loginFailed}>
+                <ModalHeader toggle={closeAlert}>Login failed</ModalHeader>
+                <ModalBody>
+                    Invalid credentials
+                </ModalBody>
+            </Modal>
         </AuthContext.Provider>
     );
 }
