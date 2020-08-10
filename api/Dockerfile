@@ -1,11 +1,11 @@
-FROM php:7.4-fpm
+FROM php:7.4
 
 RUN apt-get update -y && apt-get install -y openssl zip unzip
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-WORKDIR /api
+WORKDIR /app
 
-COPY . /api
+COPY . /app
 
 RUN composer install
 

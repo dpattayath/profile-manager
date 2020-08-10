@@ -1,8 +1,8 @@
 FROM node:13.12.0-alpine
 
-WORKDIR /ui
+WORKDIR /app
 
-ENV PATH /ui/node_modules/.bin:$PATH
+ENV PATH /app/node_modules/.bin:$PATH
 
 COPY package.json ./
 
@@ -13,4 +13,4 @@ COPY . ./
 
 EXPOSE 3000
 
-ENTRYPOINT ["npm", "start"]
+CMD ["npm", "start"]

@@ -4,18 +4,10 @@ services:
     build: ./api
     ports:
       - "8000:8000"
-    volumes:
-      - .:/api
-    env_file: ./api/.env
-    working_dir: /api
-    command: bash -c 'touch ./api/database/database.sqlite && php ./api/artisan migrate:fresh --seed && php ./api/artisan serve --host 0.0.0.0'
 
   ui:
-      build:
-        context: ./ui/
-      command: 'npm start'
-      volumes:
-        - ./ui:/ui
+      build: ./ui
       ports:
         - "3000:3000"
+
 
