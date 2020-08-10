@@ -7,19 +7,25 @@ import StorageService from '../services/StorageService';
 import AuthContext from '../contexts/AuthContext';
 
 const Auth = (props) => {
+
     const {onAuthChange} = props;
+
     const [isLoggedIn, setLoggedIn] = useState(false);
     const [user, setUser] = useState({});
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loginFailed, setLoginFailed] = useState(false);
-    const closeAlert = () => setLoginFailed(!loginFailed);
 
     // on load
     useEffect(() => {
         validateSession();
         // eslint-disable-next-line
     }, [])
+
+    /**
+    callback for failed login modal
+     */
+    const closeAlert = () => setLoginFailed(!loginFailed);
 
     /**
     validates session
@@ -38,6 +44,9 @@ const Auth = (props) => {
         }
     }
 
+    /**
+    handles actions to be taken when logged in successfully
+     */
     const loggedIn = (data) => {
         setLoggedIn(true);
         setUser(data.user);
@@ -46,6 +55,9 @@ const Auth = (props) => {
         onAuthChange(true);
     }
 
+    /**
+    handles actions to be taken when logged out successfully
+     */
     const loggedOut = () => {
         setUser({});
         setLoggedIn(false);
@@ -131,11 +143,15 @@ const Auth = (props) => {
 
             {/* Model for login failed */}
             <Modal isOpen={loginFailed}>
+
                 <ModalHeader toggle={closeAlert}>Login failed</ModalHeader>
+
                 <ModalBody>
                     Invalid credentials
                 </ModalBody>
+
             </Modal>
+
         </AuthContext.Provider>
     );
 }

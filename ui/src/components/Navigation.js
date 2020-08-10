@@ -4,7 +4,9 @@ import Auth from './Auth';
 import AuthContext from '../contexts/AuthContext';
 
 const Navigation = () => {
+
     const [isOpen, setIsOpen] = useState(false);
+
     const toggle = () => setIsOpen(!isOpen);
 
     return (

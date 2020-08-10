@@ -89,9 +89,13 @@ const ProfileCard = (props) => {
     const { authenticated } = useContext(AuthContext);
 
     return (
+
         <StyledCard>
+
             <img src={`${HOST}/images/` + profile.photo_identifier} alt={profile.first_name}/>
+
             <StyledCardBody>
+
                 <Title>
                     <span className="name">{profile.first_name} {profile.last_name}</span>
                     {authenticated && (
@@ -103,20 +107,25 @@ const ProfileCard = (props) => {
                         </span>
                     )}
                 </Title>
+
                 <SubTitle>
                     <img className="location" src={locationIcon} alt="location"/>
                     <span>{profile.location}</span>
                 </SubTitle>
+
                 <SubTitle>
                     <img className="star" src={starIcon} alt="ratings"/>
                     <span className="rating">{profile.rating}</span>
                     <span className="reviews">({profile.reviews})</span>
                 </SubTitle>
+
                 <SubTitle>
                     <img className="instagram" src={instagramIcon} alt="followers"/>
                     <span>{convertToThousands(profile.followers)} Followers</span>
                 </SubTitle>
+
             </StyledCardBody>
+
         </StyledCard>
     );
 }

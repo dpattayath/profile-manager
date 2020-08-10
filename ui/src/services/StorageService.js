@@ -1,4 +1,7 @@
 
+/**
+wrapper around browser storage
+ */
 const StorageService = {
 
     set: function(key, value) {

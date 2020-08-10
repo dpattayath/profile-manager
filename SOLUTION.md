@@ -5,11 +5,12 @@ Approach is to implement basic functionalities at this stage as a proof of conce
 
 ## Assumptions/Questions
 
-- Missing design for create/update form.
+- Request for create/update form designs?
 - Only 8 profile assets and the design renders all in one page which makes the pagination requirement not applicable.
-- Missing design for login form, so implemented this as header item for the sake of POC.
-- As per design, there is only one filter and bit confusing in terms of how it works. So implemented this as two styled select filters - category and location.
-- `Few gallery photos` as per requirement but missing in design as well as the assets provided.
+- Request design for login form? Currently implemented as header item for the sake of POC.
+- Design clarifications for filters, there is only one filter and bit confusing in terms of how it works. Currently implemented as two selects - category and location.
+- Design clarification and request for `Few gallery photos` and related assets.
+- Request for clarification of admin user account crud.
 
 ## ToDo
 - ui
@@ -19,7 +20,8 @@ Approach is to implement basic functionalities at this stage as a proof of conce
     - move js assets to cdn for faster delivery.
     - optimize user profile images once upload is enabled.
     - re-implement filters as a text field which can be matched against applicable user attributes. This allowes 1+ less click for the user and improves user experience.
-    - test framework
+    - incorporate test framework.
+    - perfecting pixels on ui components including mobile view.
 
 - api
     - redis cache to make filtering faster

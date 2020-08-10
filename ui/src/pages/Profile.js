@@ -32,12 +32,14 @@ const NoRecords = styled(Row)`
 `;
 
 const Profile = () => {
+
     const [locationFilter, setLocationFilter] = useState(0);
     const [categoryFilter, setCategoryFilter] = useState(0);
     const [profiles, setProfiles] = useState([]);
 
     const categories = ProfileService.getCategories();
     const locations = ProfileService.getLocations();
+
 
     const fetchProfiles = () => {
         ProfileService.getProfiles({
