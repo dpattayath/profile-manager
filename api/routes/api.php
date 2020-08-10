@@ -31,12 +31,16 @@ Route::namespace('\App\Http\Controllers')->prefix("profiles")->group(function() 
 
     Route::get('/', 'ProfileController@all');
 
-    Route::post('/', 'ProfileController@post');
-
     Route::get('/{id}', 'ProfileController@get');
 
-    Route::put('/{id}', 'ProfileController@put');
+    Route::group(['middleware' => 'auth:api'], function() {
 
-    Route::middleware('auth:api')->delete('/{id}', 'ProfileController@delete');
+        Route::post('/', 'ProfileController@post');
+
+        Route::put('/{id}', 'ProfileController@put');
+
+        Route::delete('/{id}', 'ProfileController@delete');
+
+    });
 
 });

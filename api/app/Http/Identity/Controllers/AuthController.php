@@ -29,12 +29,7 @@ class AuthController extends BaseController
             'password' => 'required|confirmed',
         ]);
 
-        $encryptPassword = bcrypt($request->password);
-        $user = User::create(array_merge(
-            $validator->validated(),
-            ['password' => $encryptPassword]
-        ));
-
+        $user = User::create($validator->validated());
         return response()->json([
             'data' => [
                 'user' => $user
