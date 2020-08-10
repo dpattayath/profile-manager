@@ -7,7 +7,8 @@ const AuthService = {
         return fetch(url, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
             },
             body: JSON.stringify({
                 'email': email,
@@ -17,11 +18,11 @@ const AuthService = {
     },
 
     logout: function(token) {
-        const url = "http://localhost:8000/api/auth/login";
+        const url = "http://localhost:8000/api/auth/logout";
         return fetch(url, {
             method: 'POST',
             headers: {
-                'Authorization': token,
+                'Authorization': 'Bearer ' + token,
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
             },
@@ -31,7 +32,10 @@ const AuthService = {
 
     isLoggedIn: function() {
         const token = StorageService.get('token');
-        return token;
+        if (token) {
+            return true;
+        }
+        return false;
     }
 }
 

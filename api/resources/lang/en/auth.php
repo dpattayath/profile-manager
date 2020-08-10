@@ -17,5 +17,8 @@ return [
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
     'login' => [
         'failed' => 'Invalid credentials'
+    ],
+    'logout' => [
+        'success' => 'logged out'
     ]
 ];

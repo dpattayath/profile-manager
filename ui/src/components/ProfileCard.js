@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import styled from 'styled-components';
 import locationIcon from './icons/location.svg';
 import starIcon from './icons/star.svg';
@@ -6,6 +6,7 @@ import instagramIcon from './icons/instagram.svg';
 import rubbishBin from './icons/rubbish-bin.svg';
 import {Card, CardBody} from 'reactstrap';
 import {convertToThousands} from '../utils';
+import AuthContext from '../contexts/AuthContext';
 
 const StyledCard = styled(Card)`
     width: 260px;
@@ -81,16 +82,23 @@ const SubTitle = styled.div`
 `;
 
 const ProfileCard = (props) => {
-    const {profile, isLoggedIn} = props;
+
+    const {profile, onDelete} = props;
+
+    const { authenticated } = useContext(AuthContext);
+
     return (
         <StyledCard>
             <img src={"http://localhost:3000/images/" + profile.photo_identifier} alt={profile.first_name}/>
             <StyledCardBody>
                 <Title>
                     <span className="name">{profile.first_name} {profile.last_name}</span>
-                    {isLoggedIn && (
+                    {authenticated && (
                         <span className="delete">
-                            <img className="rubbish-bin" src={rubbishBin} alt="delete"/>
+                            <img className="rubbish-bin"
+                                src={rubbishBin}
+                                alt="delete"
+                                onClick={() => onDelete(profile.id)}/>
                         </span>
                     )}
                 </Title>

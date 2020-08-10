@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { Container, Row, Col, Input } from 'reactstrap';
 import ProfileCard from '../components/ProfileCard';
 import ProfileService from '../services/ProfileService';
-import AuthService from '../services/AuthService';
 
 const Heading = styled.div`
     text-align: center;
@@ -12,6 +11,11 @@ const Heading = styled.div`
     font-weight: bold;
     font-size: 34px;
     line-height: 40px;
+    margin: 30px auto;
+`;
+
+const StyledContainer = styled(Container)`
+    margin-bottom: 40px;
 `;
 
 const StyledInput = styled(Input)`
@@ -43,6 +47,19 @@ const Profile = () => {
         )
     }
 
+    const deleteProfile = (id) => {
+        ProfileService.deleteProfile(id)
+        .then(res => res.json())
+        .then(
+            (result) => {
+                fetchProfiles();
+            },
+            (error) => {
+                console.log(error);
+            }
+        );
+    }
+
     const filterByLocation = (e) => {
         setLocationFilter(parseInt(e.target.value));
     }
@@ -57,7 +74,7 @@ const Profile = () => {
     }, [locationFilter, categoryFilter]);
 
     return (
-        <Container>
+        <StyledContainer>
 
             <Heading>Profiles</Heading>
 
@@ -93,8 +110,7 @@ const Profile = () => {
                         profile.category = categories[profile.category_id];
                         return (
                             <Col key={index}>
-                                <ProfileCard profile={profile}
-                                    isLoggedIn={AuthService.isLoggedIn()}/>
+                                <ProfileCard profile={profile} onDelete={deleteProfile}/>
                             </Col>
                         );
                     })
@@ -107,7 +123,7 @@ const Profile = () => {
                 )}
             </Row>
 
-        </Container>
+        </StyledContainer>
     )
 }
 

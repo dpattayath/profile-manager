@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import {Navbar, NavbarBrand, NavbarToggler, Collapse, Nav,NavItem, NavLink, NavbarText} from 'reactstrap';
 import Auth from './Auth';
+import AuthContext from '../contexts/AuthContext';
 
 const Navigation = () => {
-
     const [isOpen, setIsOpen] = useState(false);
     const toggle = () => setIsOpen(!isOpen);
 
@@ -23,7 +23,14 @@ const Navigation = () => {
                 </Nav>
 
                 <NavbarText>
-                    <Auth />
+                    <AuthContext.Consumer>
+                        {({authenticated, onAuthChange}) => {
+                            return (
+                                <Auth onAuthChange={onAuthChange}/>
+                            );
+                        }}
+
+                    </AuthContext.Consumer>
                 </NavbarText>
 
             </Collapse>

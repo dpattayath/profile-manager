@@ -1,3 +1,4 @@
+import StorageService from './StorageService';
 
 const ProfileService = {
 
@@ -11,6 +12,21 @@ const ProfileService = {
         }
         return fetch(url);
     },
+
+    deleteProfile: function(id) {
+        const url = "http://localhost:8000/api/profiles/" + id;
+        const token = StorageService.get('token');
+        return fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: {}
+        });
+    },
+
 
     getLocations: function(filters = []) {
         return {
