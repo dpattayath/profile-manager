@@ -1,9 +1,10 @@
 import StorageService from './StorageService';
+import {API_ENDPOINT} from '../lib/constants';
 
 const AuthService = {
 
     login: function(email, password) {
-        const url = "http://localhost:8000/api/auth/login";
+        const url = `${API_ENDPOINT}auth/login`;
         return fetch(url, {
             method: 'POST',
             headers: {
@@ -18,7 +19,7 @@ const AuthService = {
     },
 
     logout: function(token) {
-        const url = "http://localhost:8000/api/auth/logout";
+        const url = `${API_ENDPOINT}auth/logout`;
         return fetch(url, {
             method: 'POST',
             headers: {

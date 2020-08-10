@@ -1,9 +1,10 @@
 import StorageService from './StorageService';
+import {API_ENDPOINT} from '../lib/constants';
 
 const ProfileService = {
 
     getProfiles: function(filters = {}) {
-        let url = "http://localhost:8000/api/profiles?";
+        let url = `${API_ENDPOINT}profiles?`;
         if (filters.location_id > 0) {
             url += "location_id=" + encodeURIComponent(filters.location_id);
         }
@@ -14,7 +15,7 @@ const ProfileService = {
     },
 
     deleteProfile: function(id) {
-        const url = "http://localhost:8000/api/profiles/" + id;
+        const url = `${API_ENDPOINT}profiles/` + id;
         const token = StorageService.get('token');
         return fetch(url, {
             method: 'DELETE',

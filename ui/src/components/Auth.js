@@ -63,6 +63,8 @@ const Auth = (props) => {
             .then((res) => {
                 if (!res.error) {
                     loggedIn(res.data);
+                } else {
+                    setLoginFailed(true);
                 }
             }).catch((error) => {
                 loggedOut();
@@ -126,6 +128,8 @@ const Auth = (props) => {
                     </Nav>
                 )
             }
+
+            {/* Model for login failed */}
             <Modal isOpen={loginFailed}>
                 <ModalHeader toggle={closeAlert}>Login failed</ModalHeader>
                 <ModalBody>

@@ -23,6 +23,14 @@ const StyledInput = styled(Input)`
     border-radius: 2px;
 `;
 
+const NoRecords = styled(Row)`
+    text-align: center;
+    display: block;
+    margin: 20px 0;
+    color: #a71b1b;
+}
+`;
+
 const Profile = () => {
     const [locationFilter, setLocationFilter] = useState(0);
     const [categoryFilter, setCategoryFilter] = useState(0);
@@ -117,11 +125,11 @@ const Profile = () => {
                 }
             </Row>
 
-            <Row>
+            <NoRecords>
                 {profiles.length === 0 && (
-                    <Col sm="12" md={{ size: 6, offset: 3 }}>No matching profiles</Col>
+                    <Col>No matching profiles</Col>
                 )}
-            </Row>
+            </NoRecords>
 
         </StyledContainer>
     )

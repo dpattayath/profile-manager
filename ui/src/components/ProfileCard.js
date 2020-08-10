@@ -5,7 +5,8 @@ import starIcon from './icons/star.svg';
 import instagramIcon from './icons/instagram.svg';
 import rubbishBin from './icons/rubbish-bin.svg';
 import {Card, CardBody} from 'reactstrap';
-import {convertToThousands} from '../utils';
+import {convertToThousands} from '../lib/utils';
+import {HOST} from '../lib/constants';
 import AuthContext from '../contexts/AuthContext';
 
 const StyledCard = styled(Card)`
@@ -89,7 +90,7 @@ const ProfileCard = (props) => {
 
     return (
         <StyledCard>
-            <img src={"http://localhost:3000/images/" + profile.photo_identifier} alt={profile.first_name}/>
+            <img src={`${HOST}/images/` + profile.photo_identifier} alt={profile.first_name}/>
             <StyledCardBody>
                 <Title>
                     <span className="name">{profile.first_name} {profile.last_name}</span>

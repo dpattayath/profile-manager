@@ -19,6 +19,7 @@ Approach is to implement basic functionalities at this stage as a proof of conce
     - move js assets to cdn for faster delivery.
     - optimize user profile images once upload is enabled.
     - re-implement filters as a text field which can be matched against applicable user attributes. This allowes 1+ less click for the user and improves user experience.
+    - test framework
 
 - api
     - redis cache to make filtering faster
