@@ -1,10 +1,10 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import styled from 'styled-components';
 import locationIcon from './icons/location.svg';
 import starIcon from './icons/star.svg';
 import instagramIcon from './icons/instagram.svg';
 import rubbishBin from './icons/rubbish-bin.svg';
-import {Card, CardBody} from 'reactstrap';
+import {Button, Card, CardBody, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 import {convertToThousands} from '../lib/utils';
 import {HOST} from '../lib/constants';
 import AuthContext from '../contexts/AuthContext';
@@ -17,7 +17,7 @@ const StyledCard = styled(Card)`
     padding: 0px;
     margin-top: 24px;
     img {
-        width: 260px;
+        width: 258px;
         height: 248px;
     }
     color: #424242;
@@ -88,6 +88,33 @@ const ProfileCard = (props) => {
 
     const { authenticated } = useContext(AuthContext);
 
+    const [confirmDelete, setConfirmDelete] = useState(false);
+    const [idToDelete, setIdToDelete] = useState(0);
+
+    /**
+    handler for delete button click
+     */
+    const onDeleteClick = (id) => {
+        setIdToDelete(id);
+        setConfirmDelete(true);
+    }
+
+    /**
+    action upon confirming the delete
+     */
+    const onDeleteConfirm = () => {
+        if (idToDelete > 0) {
+            onDelete(idToDelete);
+            setIdToDelete(0);
+        }
+        setConfirmDelete(false);
+    }
+
+    /**
+    callback for failed login modal
+     */
+    const closeConfirmationDialog = () => setConfirmDelete(!confirmDelete);
+
     return (
 
         <StyledCard>
@@ -103,7 +130,7 @@ const ProfileCard = (props) => {
                             <img className="rubbish-bin"
                                 src={rubbishBin}
                                 alt="delete"
-                                onClick={() => onDelete(profile.id)}/>
+                                onClick={() => onDeleteClick(profile.id)}/>
                         </span>
                     )}
                 </Title>
@@ -125,6 +152,21 @@ const ProfileCard = (props) => {
                 </SubTitle>
 
             </StyledCardBody>
+
+            {/* Model for login failed */}
+            <Modal isOpen={confirmDelete}>
+
+                <ModalHeader toggle={closeConfirmationDialog}>Confirm Delete</ModalHeader>
+
+                <ModalBody>
+                    You are about to delete a profile, please confirm?
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="primary" onClick={onDeleteConfirm}>Confirm</Button>{' '}
+                    <Button color="secondary" onClick={closeConfirmationDialog}>Cancel</Button>
+                </ModalFooter>
+
+            </Modal>
 
         </StyledCard>
     );
