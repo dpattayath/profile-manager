@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
-import { Container, Row, Col, Input } from 'reactstrap';
+import { Container, Row, Col, Input, Button, Modal, ModalHeader, ModalBody,
+    ModalFooter, Label, FormGroup, Form, FormFeedback } from 'reactstrap';
 import ProfileCard from '../components/ProfileCard';
 import ProfileService from '../services/ProfileService';
 
@@ -40,7 +41,21 @@ const Profile = () => {
     const categories = ProfileService.getCategories();
     const locations = ProfileService.getLocations();
 
+    const [profileToEdit, setProfileToEdit] = useState({});
 
+    /**
+    Update form field upon changes
+    */
+    const onEditFormFieldChange = (event) => {
+        setProfileToEdit({
+            ...profileToEdit,
+            [event.target.name]: event.target.value
+        });
+    };
+
+    /**
+    function to fetch profiles
+     */
     const fetchProfiles = () => {
         ProfileService.getProfiles({
             'location_id': locationFilter,
@@ -57,6 +72,9 @@ const Profile = () => {
         )
     }
 
+    /**
+    function to delete profile based on id
+     */
     const deleteProfile = (id) => {
         ProfileService.deleteProfile(id)
         .then(res => res.json())
@@ -70,14 +88,45 @@ const Profile = () => {
         );
     }
 
-    const filterByLocation = (e) => {
-        setLocationFilter(parseInt(e.target.value));
+    /**
+    function to fetch profile info for edit form
+     */
+    const loadProfile = (id) => {
+        ProfileService.getProfile(id)
+        .then(res => res.json())
+        .then(
+            (result) => {
+                setProfileToEdit(result.data);
+            },
+            (error) => {
+                console.log(error);
+            }
+        );
     }
 
-    const filterByCategory = (e) => {
-        setCategoryFilter(parseInt(e.target.value));
+    /**
+    function to update profile
+     */
+    const onEditSave = () => {
+        ProfileService.updateProfile(profileToEdit, profileToEdit.id)
+        .then(res => res.json())
+        .then(
+            (result) => {
+                fetchProfiles();
+                setProfileToEdit({});
+            },
+            (error) => {
+                console.log(error);
+            }
+        );
     }
 
+    /**
+    callback for edit form cancel action
+     */
+    const onEditCancel = () => setProfileToEdit({});
+
+    // upon load and any filter changes
     useEffect(() => {
         fetchProfiles();
     // eslint-disable-next-line
@@ -89,28 +138,37 @@ const Profile = () => {
             <Heading>Profiles</Heading>
 
             <Row lg="2" sm="1" md="1" xs="1">
+
                 <Col>
-                    <StyledInput type="select" name="locationSelect" id="locationSelect" onChange={filterByLocation}>
+
+                    <StyledInput type="select"
+                        name="locationSelect"
+                        id="locationSelect"
+                        onChange={(event) => setLocationFilter(parseInt(event.target.value))}>
                     {
                         Object.keys(locations).map((key) => {
-                            return (
-                                <option key={key} value={key}>{locations[key]}</option>
-                            )
+                            return <option key={key} value={key}>{locations[key]}</option>
                         })
                     }
                     </StyledInput>
+
                 </Col>
+
                 <Col>
-                    <StyledInput type="select" name="categorySelect" id="categorySelect" onChange={filterByCategory}>
+
+                    <StyledInput type="select"
+                        name="categorySelect"
+                        id="categorySelect"
+                        onChange={(event) => setCategoryFilter(parseInt(event.target.value))}>
                     {
                         Object.keys(categories).map((key) => {
-                            return (
-                                <option key={key} value={key}>{categories[key]}</option>
-                            )
+                            return <option key={key} value={key}>{categories[key]}</option>
                         })
                     }
                     </StyledInput>
+
                 </Col>
+
             </Row>
 
             <Row lg="4" sm="1" md="2">
@@ -120,7 +178,10 @@ const Profile = () => {
                         profile.category = categories[profile.category_id];
                         return (
                             <Col key={index}>
-                                <ProfileCard profile={profile} onDelete={deleteProfile}/>
+                                <ProfileCard
+                                    profile={profile}
+                                    onDeleteAction={deleteProfile}
+                                    onEditAction={loadProfile}/>
                             </Col>
                         );
                     })
@@ -132,6 +193,123 @@ const Profile = () => {
                     <Col>No matching profiles</Col>
                 )}
             </NoRecords>
+
+            {/* Modal for edit profile */}
+            <Modal isOpen={profileToEdit.id > 0} size="lg">
+
+                <ModalHeader toggle={onEditCancel}>Edit Profile</ModalHeader>
+
+                <ModalBody>
+
+                    <Form>
+                        <Row form>
+                            <Col md={6}>
+                                <FormGroup>
+                                    <Label>First Name</Label>
+                                    <Input type="text"
+                                        name="first_name"
+                                        id="first_name"
+                                        value={profileToEdit.first_name}
+                                        onChange={onEditFormFieldChange}/>
+                                    <FormFeedback>Firstname is required</FormFeedback>
+                                </FormGroup>
+                            </Col>
+
+                            <Col md={6}>
+                                <FormGroup>
+                                    <Label>Last Name</Label>
+                                    <Input type="text"
+                                        name="last_name"
+                                        id="last_name"
+                                        value={profileToEdit.last_name}
+                                        onChange={onEditFormFieldChange}/>
+                                        <FormFeedback>Lastname is required</FormFeedback>
+                                </FormGroup>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md={6}>
+                                <FormGroup>
+                                    <Label>Location</Label>
+                                    <Input type="select" id="location_id" name="location_id" onChange={onEditFormFieldChange}>
+                                        {
+                                            Object.keys(locations).map((key) => {
+                                                if (key == profileToEdit.location_id) {
+                                                    return <option key={key} value={key} selected>{locations[key]}</option>
+                                                } else if (key != 0) {
+                                                    return <option key={key} value={key}>{locations[key]}</option>
+                                                }
+                                            })
+                                        }
+                                    </Input>
+                                    <FormFeedback>Location is required</FormFeedback>
+                                </FormGroup>
+                            </Col>
+                            <Col md={6}>
+                                <FormGroup>
+                                    <Label>Category</Label>
+                                    <Input type="select" id="category_id" name="category_id" onChange={onEditFormFieldChange}>
+                                        {
+                                            Object.keys(categories).map((key) => {
+                                                if (key == profileToEdit.category_id) {
+                                                    return <option key={key} value={key} selected>{categories[key]}</option>
+                                                } else if (key != 0) {
+                                                    return <option key={key} value={key}>{categories[key]}</option>
+                                                }
+                                            })
+                                        }
+                                    </Input>
+                                    <FormFeedback>Category is required</FormFeedback>
+                                </FormGroup>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md={6}>
+                                <FormGroup>
+                                    <Label>Reviews</Label>
+                                    <Input type="text"
+                                        name="reviews"
+                                        id="reviews"
+                                        value={profileToEdit.reviews}
+                                        onChange={onEditFormFieldChange}/>
+                                </FormGroup>
+                            </Col>
+                            <Col md={6}>
+                                <FormGroup>
+                                    <Label>Rating</Label>
+                                    <Input type="text"
+                                        name="rating"
+                                        id="rating"
+                                        value={profileToEdit.rating}
+                                        onChange={onEditFormFieldChange}/>
+                                </FormGroup>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md={6}>
+                                <FormGroup>
+                                    <Label>Followers</Label>
+                                    <Input type="text"
+                                        name="followers"
+                                        id="followers"
+                                        value={profileToEdit.followers}
+                                        onChange={onEditFormFieldChange}/>
+                                </FormGroup>
+                            </Col>
+                        </Row>
+                    </Form>
+                </ModalBody>
+
+                <ModalFooter>
+
+                    <Button color="primary" onClick={onEditSave}>Save</Button>{' '}
+
+                    <Button color="secondary" onClick={onEditCancel}>Cancel</Button>
+
+                </ModalFooter>
+
+            </Modal>
+            {/* end */}
 
         </StyledContainer>
     )

@@ -39,11 +39,11 @@ const Title = styled.div`
     flex-direction: row;
 
     span.name {
-        width: 90%;
+        width: 80%;
     }
 
-    span.delete {
-        img.rubbish-bin {
+    span.actions {
+        img {
             width: 22px;
             height: 22px;
         }
@@ -84,36 +84,44 @@ const SubTitle = styled.div`
 
 const ProfileCard = (props) => {
 
-    const {profile, onDelete} = props;
+    const {profile, onDeleteAction, onEditAction} = props;
 
     const { authenticated } = useContext(AuthContext);
 
-    const [confirmDelete, setConfirmDelete] = useState(false);
-    const [idToDelete, setIdToDelete] = useState(0);
+    const [toDelete, setToDelete] = useState({
+        'id': 0,
+        'show_confirm': false
+    });
+
+    /**
+    handler for edit button click
+     */
+    const onEditClick = (id) => {
+        onEditAction(id);
+    }
 
     /**
     handler for delete button click
      */
-    const onDeleteClick = (id) => {
-        setIdToDelete(id);
-        setConfirmDelete(true);
-    }
+    const onDeleteClick = (id) => setToDelete({'id': id, 'show_confirm': true});
+
+    /**
+    handler for delete form cancel
+     */
+    const onDeleteCancel = () => setToDelete({'id': 0, show_confirm: false});
 
     /**
     action upon confirming the delete
      */
     const onDeleteConfirm = () => {
-        if (idToDelete > 0) {
-            onDelete(idToDelete);
-            setIdToDelete(0);
+        if (toDelete.id > 0) {
+            onDeleteAction(toDelete.id);
         }
-        setConfirmDelete(false);
+        setToDelete({
+            'id': 0,
+            'show_confirm': false
+        });
     }
-
-    /**
-    callback for failed login modal
-     */
-    const closeConfirmationDialog = () => setConfirmDelete(!confirmDelete);
 
     return (
 
@@ -126,9 +134,11 @@ const ProfileCard = (props) => {
                 <Title>
                     <span className="name">{profile.first_name} {profile.last_name}</span>
                     {authenticated && (
-                        <span className="delete">
-                            <img className="rubbish-bin"
-                                src={rubbishBin}
+                        <span className="actions">
+                            <img src={rubbishBin}
+                                alt="edit"
+                                onClick={() => onEditClick(profile.id)}/>
+                            <img src={rubbishBin}
                                 alt="delete"
                                 onClick={() => onDeleteClick(profile.id)}/>
                         </span>
@@ -153,20 +163,27 @@ const ProfileCard = (props) => {
 
             </StyledCardBody>
 
-            {/* Model for login failed */}
-            <Modal isOpen={confirmDelete}>
+            {/* Modal for delete profile */}
+            <Modal isOpen={toDelete.show_confirm}>
 
-                <ModalHeader toggle={closeConfirmationDialog}>Confirm Delete</ModalHeader>
+                <ModalHeader toggle={onDeleteCancel}>Confirm Delete</ModalHeader>
 
                 <ModalBody>
+
                     You are about to delete a profile, please confirm?
+
                 </ModalBody>
+
                 <ModalFooter>
+
                     <Button color="primary" onClick={onDeleteConfirm}>Confirm</Button>{' '}
-                    <Button color="secondary" onClick={closeConfirmationDialog}>Cancel</Button>
+
+                    <Button color="secondary" onClick={onDeleteCancel}>Cancel</Button>
+
                 </ModalFooter>
 
             </Modal>
+            {/* end */}
 
         </StyledCard>
     );

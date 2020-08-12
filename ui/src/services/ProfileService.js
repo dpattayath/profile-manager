@@ -14,6 +14,25 @@ const ProfileService = {
         return fetch(url);
     },
 
+    getProfile: function(id) {
+        let url = `${API_ENDPOINT}profiles/${encodeURIComponent(id)}`;
+        return fetch(url);
+    },
+
+    updateProfile: function(data, id) {
+        const url = `${API_ENDPOINT}profiles/${encodeURIComponent(id)}`;
+        const token = StorageService.get('token');
+        return fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify(data)
+        });
+    },
+
     deleteProfile: function(id) {
         const url = `${API_ENDPOINT}profiles/` + id;
         const token = StorageService.get('token');
