@@ -24,9 +24,6 @@ class RepositoryException extends Exception
      */
     public function render($request)
     {
-        return response([
-            'status' => 503, // temporary error
-            'message' => 'An unknown error has been encountered, please try again later.'
-        ]);
+        return response(['message' => 'An unknown error has been encountered, please try again later.'], 503);
     }
 }

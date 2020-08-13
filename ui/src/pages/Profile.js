@@ -1,9 +1,10 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import styled from 'styled-components';
 import { Container, Row, Col, Input, Button, Modal, ModalHeader, ModalBody,
     ModalFooter, Label, FormGroup, Form, FormFeedback } from 'reactstrap';
 import ProfileCard from '../components/ProfileCard';
 import ProfileService from '../services/ProfileService';
+import AlertContext from '../contexts/AlertContext';
 
 const Heading = styled.div`
     text-align: center;
@@ -43,6 +44,7 @@ const Profile = () => {
 
     const [profileToEdit, setProfileToEdit] = useState({});
     const [errors, setErrors] = useState({});
+    const alert = useContext(AlertContext);
 
     const fieldMappers = {
         "first_name": "First Name",
@@ -82,12 +84,22 @@ const Profile = () => {
         })
         .then(
             (result) => {
-                setProfiles(result.data.data);
-            },
-            (error) => {
-                console.log(error);
+                if (result.status == 200) {
+                    setProfiles(result.data.data);
+                } else {
+                    console.log(result);
+                }
             }
         )
+        .catch(
+            (error) => {
+                if (error.response) {
+                    alert.onAlert({
+                        'type': 'danger',
+                        'message': error.response.data.message
+                    });
+                }
+        });
     }
 
     /**
@@ -98,11 +110,17 @@ const Profile = () => {
         .then(
             (result) => {
                 fetchProfiles();
-            },
-            (error) => {
-                console.log(error);
             }
-        );
+        )
+        .catch(
+            (error) => {
+                if (error.response) {
+                    alert.onAlert({
+                        'type': 'danger',
+                        'message': error.response.data.message
+                    });
+                }
+        });
     }
 
     /**
@@ -113,11 +131,17 @@ const Profile = () => {
         .then(
             (result) => {
                 setProfileToEdit(result.data.data);
-            },
-            (error) => {
-                console.log(error);
             }
-        );
+        )
+        .catch(
+            (error) => {
+                if (error.response) {
+                    alert.onAlert({
+                        'type': 'danger',
+                        'message': error.response.data.message
+                    });
+                }
+        });
     }
 
     /**
@@ -130,8 +154,10 @@ const Profile = () => {
                 fetchProfiles();
                 setProfileToEdit({});
             }
-        ).catch(
+        )
+        .catch(
             (error) => {
+                // TODO Seperate validation errors and failures
             if (error.response) {
                 let formattedErrors = {};
                 Object.keys(error.response.data.errors).map((key) => {

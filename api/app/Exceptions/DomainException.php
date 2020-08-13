@@ -21,9 +21,6 @@ class DomainException extends \Exception
      */
     public function render($request)
     {
-        return response([
-            'status' => 400,
-            'message' => $this->message
-        ]);
+        return response(['message' => $this->message], 400);
     }
 }
