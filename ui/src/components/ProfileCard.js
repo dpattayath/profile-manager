@@ -4,6 +4,7 @@ import locationIcon from './icons/location.svg';
 import starIcon from './icons/star.svg';
 import instagramIcon from './icons/instagram.svg';
 import rubbishBin from './icons/rubbish-bin.svg';
+import editPen from './icons/pencil.svg';
 import {Button, Card, CardBody, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 import {convertToThousands} from '../lib/utils';
 import {HOST} from '../lib/constants';
@@ -43,9 +44,13 @@ const Title = styled.div`
     }
 
     span.actions {
-        img {
+        img.delete {
             width: 22px;
             height: 22px;
+        }
+        img.edit {
+            width: 20px;
+            height: 20px;
         }
     }
 `;
@@ -135,10 +140,12 @@ const ProfileCard = (props) => {
                     <span className="name">{profile.first_name} {profile.last_name}</span>
                     {authenticated && (
                         <span className="actions">
-                            <img src={rubbishBin}
+                            <img className="edit"
+                                src={editPen}
                                 alt="edit"
                                 onClick={() => onEditClick(profile.id)}/>
-                            <img src={rubbishBin}
+                            <img className="delete"
+                                src={rubbishBin}
                                 alt="delete"
                                 onClick={() => onDeleteClick(profile.id)}/>
                         </span>

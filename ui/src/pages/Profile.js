@@ -42,6 +42,14 @@ const Profile = () => {
     const locations = ProfileService.getLocations();
 
     const [profileToEdit, setProfileToEdit] = useState({});
+    const [errors, setErrors] = useState({});
+
+    const fieldMappers = {
+        "first_name": "First Name",
+        "last_name": "Last Name",
+        "location_id": "Location",
+        "category_id": "Category",
+    }
 
     /**
     Update form field upon changes
@@ -51,6 +59,17 @@ const Profile = () => {
             ...profileToEdit,
             [event.target.name]: event.target.value
         });
+        if (event.target.value) {
+            setErrors({
+                ...errors,
+                [event.target.name]: ""
+            })
+        } else {
+            setErrors({
+                ...errors,
+                [event.target.name]: [fieldMappers[event.target.name]] + " is required"
+            })
+        }
     };
 
     /**
@@ -61,10 +80,9 @@ const Profile = () => {
             'location_id': locationFilter,
             'category_id': categoryFilter,
         })
-        .then(res => res.json())
         .then(
             (result) => {
-                setProfiles(result.data);
+                setProfiles(result.data.data);
             },
             (error) => {
                 console.log(error);
@@ -77,7 +95,6 @@ const Profile = () => {
      */
     const deleteProfile = (id) => {
         ProfileService.deleteProfile(id)
-        .then(res => res.json())
         .then(
             (result) => {
                 fetchProfiles();
@@ -93,10 +110,9 @@ const Profile = () => {
      */
     const loadProfile = (id) => {
         ProfileService.getProfile(id)
-        .then(res => res.json())
         .then(
             (result) => {
-                setProfileToEdit(result.data);
+                setProfileToEdit(result.data.data);
             },
             (error) => {
                 console.log(error);
@@ -109,16 +125,21 @@ const Profile = () => {
      */
     const onEditSave = () => {
         ProfileService.updateProfile(profileToEdit, profileToEdit.id)
-        .then(res => res.json())
         .then(
             (result) => {
                 fetchProfiles();
                 setProfileToEdit({});
-            },
-            (error) => {
-                console.log(error);
             }
-        );
+        ).catch(
+            (error) => {
+            if (error.response) {
+                let formattedErrors = {};
+                Object.keys(error.response.data.errors).map((key) => {
+                    formattedErrors[key] = error.response.data.errors[key].join();
+                });
+                setErrors(formattedErrors);
+            }
+        });
     }
 
     /**
@@ -210,8 +231,9 @@ const Profile = () => {
                                         name="first_name"
                                         id="first_name"
                                         value={profileToEdit.first_name}
-                                        onChange={onEditFormFieldChange}/>
-                                    <FormFeedback>Firstname is required</FormFeedback>
+                                        onChange={onEditFormFieldChange}
+                                        invalid={errors.first_name}/>
+                                    <FormFeedback>{errors.first_name}</FormFeedback>
                                 </FormGroup>
                             </Col>
 
@@ -222,8 +244,9 @@ const Profile = () => {
                                         name="last_name"
                                         id="last_name"
                                         value={profileToEdit.last_name}
-                                        onChange={onEditFormFieldChange}/>
-                                        <FormFeedback>Lastname is required</FormFeedback>
+                                        onChange={onEditFormFieldChange}
+                                        invalid={errors.last_name}/>
+                                        <FormFeedback>{errors.last_name}</FormFeedback>
                                 </FormGroup>
                             </Col>
                         </Row>
@@ -231,7 +254,10 @@ const Profile = () => {
                             <Col md={6}>
                                 <FormGroup>
                                     <Label>Location</Label>
-                                    <Input type="select" id="location_id" name="location_id" onChange={onEditFormFieldChange}>
+                                    <Input type="select" id="location_id"
+                                        name="location_id"
+                                        onChange={onEditFormFieldChange}
+                                        invalid={errors.location_id}>
                                         {
                                             Object.keys(locations).map((key) => {
                                                 if (key == profileToEdit.location_id) {
@@ -242,13 +268,16 @@ const Profile = () => {
                                             })
                                         }
                                     </Input>
-                                    <FormFeedback>Location is required</FormFeedback>
+                                    <FormFeedback>{errors.location_id}</FormFeedback>
                                 </FormGroup>
                             </Col>
                             <Col md={6}>
                                 <FormGroup>
                                     <Label>Category</Label>
-                                    <Input type="select" id="category_id" name="category_id" onChange={onEditFormFieldChange}>
+                                    <Input type="select" id="category_id"
+                                        name="category_id"
+                                        onChange={onEditFormFieldChange}
+                                        invalid={errors.category_id}>
                                         {
                                             Object.keys(categories).map((key) => {
                                                 if (key == profileToEdit.category_id) {
@@ -259,7 +288,7 @@ const Profile = () => {
                                             })
                                         }
                                     </Input>
-                                    <FormFeedback>Category is required</FormFeedback>
+                                    <FormFeedback>{errors.category_id}</FormFeedback>
                                 </FormGroup>
                             </Col>
                         </Row>

@@ -1,5 +1,6 @@
 import StorageService from './StorageService';
 import {API_ENDPOINT} from '../lib/constants';
+import axios from 'axios';
 
 const ProfileService = {
 
@@ -11,39 +12,41 @@ const ProfileService = {
         if (filters.category_id > 0) {
             url += "&category_id=" + encodeURIComponent(filters.category_id);
         }
-        return fetch(url);
+        return axios.get(url);
     },
 
     getProfile: function(id) {
         let url = `${API_ENDPOINT}profiles/${encodeURIComponent(id)}`;
-        return fetch(url);
+        return axios.get(url);
     },
 
     updateProfile: function(data, id) {
         const url = `${API_ENDPOINT}profiles/${encodeURIComponent(id)}`;
         const token = StorageService.get('token');
-        return fetch(url, {
+        return axios({
+            url: url,
             method: 'PUT',
             headers: {
                 'Authorization': 'Bearer ' + token,
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
             },
-            body: JSON.stringify(data)
+            data: data
         });
     },
 
     deleteProfile: function(id) {
         const url = `${API_ENDPOINT}profiles/` + id;
         const token = StorageService.get('token');
-        return fetch(url, {
+        return axios({
+            url: url,
             method: 'DELETE',
             headers: {
                 'Authorization': 'Bearer ' + token,
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
             },
-            body: {}
+            data: {}
         });
     },
 
