@@ -86,8 +86,6 @@ const Profile = () => {
             (result) => {
                 if (result.status == 200) {
                     setProfiles(result.data.data);
-                } else {
-                    console.log(result);
                 }
             }
         )
