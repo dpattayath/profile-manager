@@ -48,7 +48,6 @@ class ProfileController extends Controller
 
     public function delete(int $id)
     {
-        throw new RepositoryException("asdsadsadasd");
         return $this->profileService->delete($id);
     }
 }
