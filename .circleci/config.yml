@@ -22,10 +22,10 @@ jobs:
       - checkout
 
       - run: 
-        name: "prepare environment"
-        command: | 
-          sudo apt update
-          sudo docker-php-ext-install zip
+          name: "prepare environment"
+          command: |
+            sudo apt update
+            sudo docker-php-ext-install zip
 
       # Download and cache dependencies
       - restore_cache:
@@ -36,8 +36,8 @@ jobs:
             - v1-dependencies-
 
       - run: 
-        name: "install dependencies"
-        command: composer install -n --prefer-dist
+          name: "install dependencies"
+          command: composer install -n --prefer-dist
 
       - save_cache:
           key: v1-dependencies-{{ checksum "composer.json" }}
@@ -45,18 +45,18 @@ jobs:
             - ./vendor
 
       - run:
-        name: "create environment file and generate app key"
-        command: |
-          mv .env.testing .env
-          php artisan key:generate
+          name: "create environment file and generate app key"
+          command: |
+            mv .env.testing .env
+            php artisan key:generate
 
       - run:
-        name: "create database and run migration"
-        command: |
-          touch storage/testing.sqlite
-          php artisan migrate --env=testing
-        
+          name: "create database and run migration"
+          command: |
+            touch storage/testing.sqlite
+            php artisan migrate --env=testing
+
       - run:
-        name: "run tests"
-        command: ./vendor/bin/phpunit
+          name: "run tests"
+          command: ./vendor/bin/phpunit
       
