@@ -37,26 +37,26 @@ jobs:
 
       - run: 
           name: "install dependencies"
-          command: composer install -n --prefer-dist
+          command: api/composer install -n --prefer-dist
 
       - save_cache:
-          key: v1-dependencies-{{ checksum "composer.json" }}
+          key: v1-dependencies-{{ checksum "api/composer.json" }}
           paths:
-            - ./vendor
+            - ./api/vendor
 
       - run:
           name: "create environment file and generate app key"
           command: |
-            mv .env.testing .env
-            php artisan key:generate
+            mv api/.env.testing .env
+            php api/artisan key:generate
 
       - run:
           name: "create database and run migration"
           command: |
-            touch storage/testing.sqlite
-            php artisan migrate --env=testing
+            touch api/storage/testing.sqlite
+            php api/artisan migrate --env=testing
 
       - run:
           name: "run tests"
-          command: ./vendor/bin/phpunit
+          command: ./api/vendor/bin/phpunit
       
