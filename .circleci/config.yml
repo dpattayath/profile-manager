@@ -37,7 +37,7 @@ jobs:
 
       - run: 
           name: "install dependencies"
-          command: api/composer install -n --prefer-dist
+          command: composer install -n --prefer-dist
 
       - save_cache:
           key: v1-dependencies-{{ checksum "api/composer.json" }}
